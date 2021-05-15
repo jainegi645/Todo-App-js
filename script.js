@@ -42,6 +42,9 @@ form.addEventListener('submit',event =>{
 
 //Render the todo items
 function renderTodo(todo){
+    //to persisit data in the local storage
+    localStorage.setItem('todoItemsRef',JSON.stringify(todoItems));
+
     //select the first element with a class of `js-todo-list`
     const list = document.querySelector('.js-todo-list');
 
@@ -52,6 +55,9 @@ function renderTodo(todo){
     if (todo.deleted) {
         // remove the item from the DOM
         item.remove();
+        //this line to clear whitespace from the list container
+        // when `todoItems` is empty
+        if(todoItems.length === 0) list.innerHTML = '';
         return
       }
 
@@ -142,3 +148,21 @@ function deleteTodo(key){
    todoItems = todoItems.filter(item => item.id !== Number(key));
    renderTodo(todo);
 }
+
+
+// to render any existing todo list items when the page is loaded
+//from local storage
+document.addEventListener('DOMContentLoaded',()=>{
+    const ref = localStorage.getItem('todoItemsRef');
+    if(ref){
+        todoItems = JSON.parse(ref);
+        todoItems.forEach(t =>{
+            renderTodo(t);
+        });
+    }
+});
+
+
+
+
+
